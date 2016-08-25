@@ -66,12 +66,15 @@ all:
 
 dropbox: $(DROPBOXFILES)
 
+git-push:
+	git push
+
 man-pages: $(MANPAGES)
 
 markua: $(MARKUASRC)
 	perl -pi.bak -e 's/\.md$$/.markua/' $(MANUSCRIPT)/Book.txt
 
-preview: dropbox
+preview: git-push
 	leanpub preview
 
 status:
