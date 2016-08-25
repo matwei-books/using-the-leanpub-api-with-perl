@@ -21,10 +21,12 @@ sub convert {
 			my $line = shift;
 			chomp $line;
 			if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
+				print $out "\n";
 				$last_ul_item = $2;
 				return 2;
 			}
 			if ($line !~ /^\s*$/) {
+				print $out "\n";
 				$last_par = $line;
 				return 1;
 			}
@@ -33,12 +35,12 @@ sub convert {
 		},
 		1 => sub {			# paragraph
 			my $line = shift;
+			chomp $line;
 			if ($line =~ /^\s*$/) {
-				print $out $last_par, "\n", $line;
+				print $out "$last_par\n";
 				$last_par = "";
 				return 0;
 			}
-			chomp $line;
 			$last_par .= " $line";
 			return 1;
 		},

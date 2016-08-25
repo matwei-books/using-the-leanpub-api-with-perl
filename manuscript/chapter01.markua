@@ -1,3 +1,4 @@
+
 # Using the Perl module
 
 This book describes the Perl module *WebService::Leanpub* and how I use it to produce books. Using the module it is possible to access the Leanpub API from within Perl or from the command line. It is mainly useful to authors at Leanpub and to those who help them to produce their books.
@@ -20,6 +21,7 @@ Using the API I can
 * query for the status of the last job,
 * get the sales data,
 * and create coupons for the book as well as get a list of the coupons.
+
 ## How do I use the Perl module?
 
 All actions related to one book take place as method calls to an object of type `WebService::Leanpub`. For this reason I provide the API key and the slug when using the function `new()` to create such an object.
@@ -47,7 +49,7 @@ Creating a preview for an individual file is a little bit more elaborate because
 The following example shows how to open a file, read its content into a scalar variable and send it to the web API.
 
     if (open(my $input, '<', $filename)) {       local $/;       undef $/;       my $content = <$input>;       close $input;
-    
+
       $pv = $wl->single({ content => $content });     }
 
 ### Publish
@@ -77,9 +79,9 @@ There are two methods to get the sales data.
 I use one for a summary of the sales data and the other for information about the individual purchases.
 
     $pv = $wl->get_sales_data();
-    
+
     $pv = $wl->get_individual_purchases( { } );
-    
+
     $pv = $wl->get_individual_purchases( { page => 2 } );
 
 The function `get_individual_purchases()` delivers the data for the last 50 purchases. If I want to get older data, I have to give the page number of the older data. A page contains at most data for 50 purchases. The first page (`page => 1`) contains the data of the most recent purchases, the higher the page number, the older the sales data.
@@ -127,4 +129,3 @@ This option is only active with the command `publish` and I need this option for
 ## Upshot
 
 I use the module `WebService::Leanpub` or more precisely the command line program `leanpub` together with an appropriate Makefile daily when working on my books. It fits seamless into my workflow which consists of an editor window, a shell and a PDF viewer. Using this I avoid interruptions - and possible distractions - from switching to the web browser.
-
