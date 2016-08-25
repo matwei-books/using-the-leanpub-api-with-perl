@@ -1,0 +1,52 @@
+#!/usr/bin/perl 
+#
+#         FILE: markdown2markua.pl
+#
+#        USAGE: ./markdown2markua.pl < file.markdown > file.markua
+#
+#  DESCRIPTION: convert markdown text to markua
+#
+#       AUTHOR: Mathias Weidner
+
+use strict;
+use warnings;
+
+sub convert {
+	my ($in,$out) = @_;
+
+	my $last_par = "";
+	my %state_table = (
+		0 => sub {			# empty line
+			my $line = shift;
+			if ($line !~ /^\s*$/) {
+				chomp $line;
+				$last_par = $line;
+				return 1;
+			};
+			print $out $line;
+			return 0;
+		},
+		1 => sub {			# paragraph
+			my $line = shift;
+			if ($line =~ /^\s*$/) {
+				print $out $last_par, "\n", $line;
+				$last_par = "";
+				return 0;
+			};
+			chomp $line;
+			$last_par .= " $line";
+			return 1;
+		}
+	);
+	my $state = 0;
+
+	while (my $line = <$in>) {
+		$state = $state_table{$state}->($line);
+	}
+	if ($last_par) {
+		print $out $last_par, "\n";
+	}
+} # convert()
+
+convert(*STDIN,*STDOUT);
+
