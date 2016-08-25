@@ -14,8 +14,12 @@ A further essential component is the slug, the part of the URL for your book fol
 
 Using the API I can
 
-*   create previews for the book, parts of the book or individual files, *   publish the book, *   get the book summary information (this is the only function that works     without an API key), *   query for the status of the last job, *   get the sales data, *   and create coupons for the book as well as get a list of the coupons.
-
+* create previews for the book, parts of the book or individual files,
+* publish the book,
+* get the book summary information (this is the only function that works     without an API key),
+* query for the status of the last job,
+* get the sales data,
+* and create coupons for the book as well as get a list of the coupons.
 ## How do I use the Perl module?
 
 All actions related to one book take place as method calls to an object of type `WebService::Leanpub`. For this reason I provide the API key and the slug when using the function `new()` to create such an object.

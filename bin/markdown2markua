@@ -15,15 +15,20 @@ sub convert {
 	my ($in,$out) = @_;
 
 	my $last_par = "";
+	my $last_ul_item = "";
 	my %state_table = (
 		0 => sub {			# empty line
 			my $line = shift;
+			chomp $line;
+			if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
+				$last_ul_item = $2;
+				return 2;
+			}
 			if ($line !~ /^\s*$/) {
-				chomp $line;
 				$last_par = $line;
 				return 1;
-			};
-			print $out $line;
+			}
+			print $out $line, "\n";
 			return 0;
 		},
 		1 => sub {			# paragraph
@@ -32,11 +37,27 @@ sub convert {
 				print $out $last_par, "\n", $line;
 				$last_par = "";
 				return 0;
-			};
+			}
 			chomp $line;
 			$last_par .= " $line";
 			return 1;
-		}
+		},
+		2 => sub {			# unordered list
+			my $line = shift;
+			chomp $line;
+			if ($line =~ /^\s*$/) {
+				print $out "* $last_ul_item\n";
+				$last_ul_item = "";
+				return 0;
+			}
+			if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
+				print $out "* $last_ul_item\n";
+				$last_ul_item = $2;
+				return 2;
+			}
+			$last_ul_item .= " $line";
+			return 2;
+		},
 	);
 	my $state = 0;
 
