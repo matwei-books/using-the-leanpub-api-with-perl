@@ -14,8 +14,9 @@ use warnings;
 sub convert {
 	my ($in,$out) = @_;
 
-	my $last_par = "";
-	my $last_ul_item = "";
+	my $last_code_block = "";
+	my $last_par        = "";
+	my $last_ul_item    = "";
 	my %state_table = (
 		0 => sub {			# empty line
 			my $line = shift;
@@ -24,6 +25,10 @@ sub convert {
 				print $out "\n";
 				$last_ul_item = $2;
 				return 2;
+			}
+			if ($line =~ /^ {4}(.+)$/) {
+				$last_code_block = "$1\n";
+				return 3;
 			}
 			if ($line !~ /^\s*$/) {
 				print $out "\n";
@@ -52,13 +57,49 @@ sub convert {
 				$last_ul_item = "";
 				return 0;
 			}
-			if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
+			if ($line =~ /^[*-+](\s{1,4}|\t)(.*)$/) {
 				print $out "* $last_ul_item\n";
 				$last_ul_item = $2;
 				return 2;
 			}
 			$last_ul_item .= " $line";
 			return 2;
+		},
+		3 => sub {			# indented code block
+			my $line = shift;
+			if ($line =~ /^ {4}(.+)$/) {
+				$last_code_block .= "$1\n";
+				return 3;
+			}
+			if ($line =~ /^\t(.+)$/) {
+				$last_code_block .= "    $1\n";
+				return 3;
+			}
+			if ($line =~ /^\s*$/) {
+				return 4;
+			}
+		},
+		4 => sub {			# empty line after indented code
+			my $line = shift;
+			chomp $line;
+			if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
+				print $out "\n```\n$last_code_block```\n\n";
+				$last_code_block = "";
+				$last_ul_item = $2;
+				return 2;
+			}
+			if ($line =~ /^ {4}(.+)$/) {
+				$last_code_block .= "\n$1\n";
+				return 3;
+			}
+			if ($line !~ /^\s*$/) {
+				print $out "\n```\n$last_code_block```\n\n";
+				$last_code_block = "";
+				$last_par = $line;
+				return 1;
+			}
+			$last_code_block .= "\n";
+			return 4;
 		},
 	);
 	my $state = 0;
