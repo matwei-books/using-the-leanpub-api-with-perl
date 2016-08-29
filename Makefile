@@ -1,5 +1,7 @@
 # Makefile for leanpub / dropbox
 
+PERLWEBSERVICELEANPUB = ../perl-WebService-Leanpub
+
 BOOK = Book.txt
 PREVIEW = Subset.txt
 SAMPLE = Sample.txt
@@ -56,11 +58,11 @@ $(MANUSCRIPT)/images/%.jpg: images/%.jpg
 $(MANUSCRIPT)/images/%.png: images/%.png
 	cp $< $@
 
-$(MANUSCRIPT)/module.md: ../lib/WebService/Leanpub.pm
-	bin/pod2markdown < $< | perl -p -e 's/^#/##/' > $@
+$(MANUSCRIPT)/module.md: $(PERLWEBSERVICELEANPUB)/lib/WebService/Leanpub.pm
+	pod2markdown < $< | perl -p -e 's/^#/##/' > $@
 
-$(MANUSCRIPT)/cli.md: ../bin/leanpub
-	bin/pod2markdown < $< | perl -p -e 's/^#/##/' > $@
+$(MANUSCRIPT)/cli.md: $(PERLWEBSERVICELEANPUB)/bin/leanpub
+	pod2markdown < $< | perl -p -e 's/^#/##/' > $@
 
 all:
 
