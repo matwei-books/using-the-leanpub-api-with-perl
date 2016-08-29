@@ -22,7 +22,12 @@ Having a new Dropbox folder containing the books files, I start creating my work
 
 In this directory I create a directory named images and two links referring to the subdirectories *manuscript* and *preview* of the Dropbox folder.
 
-    $ slug=using-the-leanpub-api-with-perl     $ mkdir images     $ ln -s ~/Dropbox/$slug/manuscript .     $ ln -s ~/Dropbox/$slug/preview .
+```
+$ slug=using-the-leanpub-api-with-perl
+$ mkdir images
+$ ln -s ~/Dropbox/$slug/manuscript .
+$ ln -s ~/Dropbox/$slug/preview .
+```
 
 After that I copy all files from *manuscript* into the current directory and all files from *manuscript/images* to the directory *images*
 
@@ -34,7 +39,17 @@ Now that I have everything in place it's time to setup the Makefile.
 
 First I define some constants which I will use later in different rules.
 
-    DROPBOXDIR = manuscript     DROPBOXFILES = $(DROPBOXDIR)/Book.txt \                    $(DROPBOXDIR)/Sample.txt \                    $(DROPBOXDIR)/Subset.txt \                    $(DROPBOXDIR)/images/title_page.png \                    $(DROPBOXDIR)/chapter01.md \                    $(DROPBOXDIR)/chapter01-empty.md \ 		   ...     #
+```
+DROPBOXDIR = manuscript
+DROPBOXFILES = $(DROPBOXDIR)/Book.txt \
+               $(DROPBOXDIR)/Sample.txt \
+               $(DROPBOXDIR)/Subset.txt \
+               $(DROPBOXDIR)/images/title_page.png \
+               $(DROPBOXDIR)/chapter01.md \
+               $(DROPBOXDIR)/chapter01-empty.md \
+    	   ...
+#
+```
 
 *DROPBOXDIR* contains the path to the Dropbox folder for this book.
 
@@ -44,19 +59,28 @@ First I define some constants which I will use later in different rules.
 
 Those constants are followed by some implicit rules how to create certain files. These are mostly copy commands:
 
-    $(DROPBOXDIR)/%.md: %.md 	cp $< $@
+```
+$(DROPBOXDIR)/%.md: %.md
+    cp $< $@
 
-    $(DROPBOXDIR)/%.txt: %.txt 	cp $< $@
+$(DROPBOXDIR)/%.txt: %.txt
+    cp $< $@
 
-    $(DROPBOXDIR)/images/%.png: images/%.png 	cp $< $@
+$(DROPBOXDIR)/images/%.png: images/%.png
+    cp $< $@
 
-    $(DROPBOXDIR)/images/%.jpg: images/%.jpg 	cp $< $@
+$(DROPBOXDIR)/images/%.jpg: images/%.jpg
+    cp $< $@
+```
 
 These rules just say: if you need a file in `$(DROPBOXDIR)` and you have a newer file with the same name in this directory, just copy it over to where you need it. The same holds for the files in directory *images* or *code* if I happen to include code in my book.
 
 Sometimes I like to have the full table of contents in the sample book but without the text in most of the chapters. To achieve this, I create files named *chapter$nr-empty.md* automatically from the input:
 
-    $(DROPBOXDIR)/%-empty.md: %.md     	grep '^#' $< | grep -v '^###' | sed -e 's/^/\n/' > $@
+```
+$(DROPBOXDIR)/%-empty.md: %.md
+	grep '^#' $< | grep -v '^###' | sed -e 's/^/\n/' > $@
+```
 
 So, whenever I don't want the text of a chapter but the  titles, I replace `chapter$nr.md` with `chapter$nr-empty.md` in *Sample.txt* and be done.
 
@@ -68,18 +92,29 @@ The first explicit target is called `all` and does nothing. So if I accidentally
 
 There are four targets that I use regularly 
 
-    dropbox: $(DROPBOXFILES)
+```
+dropbox: $(DROPBOXFILES)
+```
 
 This is a valid target although it contains no explicit action. This rule makes sure that all necessary files are copied to the Dropbox folder.
 
-    partial: dropbox revision.md             sleep 15 && leanpub partial_preview
+```
+partial: dropbox revision.md
+        sleep 15 && leanpub partial_preview
+```
 
 This targets depends on the target `dropbox` so that it first makes sure that all files are copied to the Dropbox folder and then starts its action, namely sleep 15 seconds to allow Dropbox to copy those files to Leanpub and after that starting the generation of a partial preview - using *Subset.txt* - for the book.
 
-    preview: dropbox revision.md             sleep 15 && leanpub preview
+```
+preview: dropbox revision.md
+        sleep 15 && leanpub preview
+```
 
 This target does the same for a full preview.
 
-    status:             leanpub job_status
+```
+status:
+        leanpub job_status
+```
 
 I prefer to use this target to call `make status` instead of `leanpub job_status` just to save a few keystrokes.

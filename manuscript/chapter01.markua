@@ -26,9 +26,11 @@ Using the API I can
 
 All actions related to one book take place as method calls to an object of type `WebService::Leanpub`. For this reason I provide the API key and the slug when using the function `new()` to create such an object.
 
-    use WebService::Leanpub;
+```
+use WebService::Leanpub;
 
-    my $wl = WebService::Leanpub->new($api_key, $slug);
+my $wl = WebService::Leanpub->new($api_key, $slug);
+```
 
 Using this object I call different methods, depending from what I want to do. These methods return the text of the web API in JSON format which I can print or interpret in my program.
 
@@ -36,11 +38,15 @@ Using this object I call different methods, depending from what I want to do. Th
 
 To create a complete or partial preview is really easy, there is a method for each of these tasks. In the files *Book.txt* and *Subset.txt* respectively in the Leanpub manuscript directory are the lists of the files to be used for the preview. Leanpub authors know how look like. So I simply have to call
 
-    $pv = $wl->preview();
+```
+$pv = $wl->preview();
+```
 
 or
 
-    $pv = $wl->subset();
+```
+$pv = $wl->subset();
+```
 
 with my `WebService::Leanpub` object.
 
@@ -48,27 +54,40 @@ Creating a preview for an individual file is a little bit more elaborate because
 
 The following example shows how to open a file, read its content into a scalar variable and send it to the web API.
 
-    if (open(my $input, '<', $filename)) {       local $/;       undef $/;       my $content = <$input>;       close $input;
+```
+if (open(my $input, '<', $filename)) {
+  local $/;
+  undef $/;
+  my $content = <$input>;
+  close $input;
 
-      $pv = $wl->single({ content => $content });     }
+  $pv = $wl->single({ content => $content });
+}
+```
 
 ### Publish
 
 Publishing a book is easier. I can advise whether the readers get an email and what should be the content of that email. You can find details in the man page of the module.
 
-    $pv = $wl->publish( $opt );
+```
+$pv = $wl->publish( $opt );
+```
 
 ### Getting the status of the running job
 
 Because I only start the creation of a preview or the publishing process of my book, it may happen that I want to know the state of the affairs. This is as easy as it can be:
 
-    $pv = $wl->get_job_status();
+```
+$pv = $wl->get_job_status();
+```
 
 ### Summary of the book
 
 To get a summary of the book I just need to call the function `summary()`.
 
-    $pv = $wl->summary();
+```
+$pv = $wl->summary();
+```
 
 The web API doesn't need an API key for this task but the function `new()` that created my `WebService::Leanpub` object needed one. If I want to know how the summary looks like without an API key, I have to call `WebService::Leanpub->new()` using a false API key.
 
@@ -78,11 +97,13 @@ There are two methods to get the sales data.
 
 I use one for a summary of the sales data and the other for information about the individual purchases.
 
-    $pv = $wl->get_sales_data();
+```
+$pv = $wl->get_sales_data();
 
-    $pv = $wl->get_individual_purchases( { } );
+$pv = $wl->get_individual_purchases( { } );
 
-    $pv = $wl->get_individual_purchases( { page => 2 } );
+$pv = $wl->get_individual_purchases( { page => 2 } );
+```
 
 The function `get_individual_purchases()` delivers the data for the last 50 purchases. If I want to get older data, I have to give the page number of the older data. A page contains at most data for 50 purchases. The first page (`page => 1`) contains the data of the most recent purchases, the higher the page number, the older the sales data.
 
@@ -90,11 +111,13 @@ The function `get_individual_purchases()` delivers the data for the last 50 purc
 
 I can create, list and change coupons.
 
-    $pv = $wl->create_coupon(\%lopt);
+```
+$pv = $wl->create_coupon(\%lopt);
 
-    $pv = $wl->get_coupon_list()
+$pv = $wl->get_coupon_list()
 
-    $pv = $wl->update_coupon(\%lopt);
+$pv = $wl->update_coupon(\%lopt);
+```
 
 Details can be found in the documentation of the module in chapter 2.
 
@@ -104,19 +127,40 @@ I don't need to program - with Perl - anymore, because there is a command line p
 
 The program uses `Getopt::Long` and `Pod::Usage`, so it's very easy to get a short help text with the command line option `-h` or `--help` and the full man page with option `-m` or `--man`.
 
-    $ leanpub --help     Usage:          leanpub [options] command [command options]     ...
+```
+$ leanpub --help
+Usage:
+     leanpub [options] command [command options]
+...
+```
 
 When calling the program I tell the program what to do with the command argument. These command arguments are called like the methods of the Perl module.
 
 I may add some global options before the command and some command specific options after the command. The man page of the program - contained in chapter 3 - goes into the details.
 
-    Options:       -api_key=key               Provide the Leanpub API key to be used for all actions.       ...       -really State that you really intend to do the command (e.g. publish).       ...       -slug=your_book               Provide the book's slug.       ...
+```
+Options:
+  -api_key=key
+          Provide the Leanpub API key to be used for all actions.
+  ...
+  -really State that you really intend to do the command (e.g. publish).
+  ...
+  -slug=your_book
+          Provide the book's slug.
+  ...
+```
 
 The global options `-api_key` and `-slug` are so important that I have to provide them nearly every time I call the program.
 
 Because this is tedious I can provide these in a configuration file called *.leanpub*.
 
-    $ cat .leanpub     # configuration for leanpub     #     api_key = my_api_key_from_leanpub     slug    = using-the-leanpub-api-with-perl
+```
+$ cat .leanpub
+# configuration for leanpub
+#
+api_key = my_api_key_from_leanpub
+slug    = using-the-leanpub-api-with-perl
+```
 
 The option `-really' may look a little bit strange at first.
 
