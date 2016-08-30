@@ -22,7 +22,7 @@ sub convert {
 			my $line = shift;
 			chomp $line;
 			if ($line =~ /^-# (.+)$/) {
-				print $out "# $1 #\n";
+				print $out "# $1 #";
 				return 0;
 			}
 			if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
