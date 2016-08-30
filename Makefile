@@ -7,6 +7,7 @@ PREVIEW = Subset.txt
 SAMPLE = Sample.txt
 
 MANUSCRIPT = manuscript
+TMARKUA    = t/tmp
 
 MANPAGES = $(MANUSCRIPT)/module.md $(MANUSCRIPT)/cli.md
 
@@ -32,8 +33,17 @@ MARKUASRC = $(MANUSCRIPT)/preface.markua \
             $(MANUSCRIPT)/module.markua \
             $(MANUSCRIPT)/cli.markua \
 #
+MARKUATEST = $(TMARKUA)/headings.markua \
+             $(TMARKUA)/lists.markua \
+             $(TMARKUA)/paragraph.markua \
+#
+	     
 IMAGES = \
 #
+
+$(TMARKUA)/%.markua: t/markdown/%.md
+	bin/markdown2markua < $< > $@
+
 %.markua: %.md bin/markdown2markua
 	bin/markdown2markua < $< > $@
 
@@ -66,6 +76,11 @@ $(MANUSCRIPT)/cli.md: $(PERLWEBSERVICELEANPUB)/bin/leanpub
 
 all:
 
+clean: clean_test
+
+clean_test:
+	rm -f $(MARKUATEST)
+
 dropbox: $(DROPBOXFILES)
 
 git-push:
@@ -84,5 +99,11 @@ status:
 
 summary:
 	leanpub summary
+
+test:	clean_test $(TMARKUA) $(MARKUATEST)
+	diff -ru t/markua $(TMARKUA)
+
+$(TMARKUA):
+	mkdir -p $(TMARKUA)
 
 # end of Makefile
