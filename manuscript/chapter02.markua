@@ -10,6 +10,7 @@ Later I start the editing process with only two or three windows:
 * one window to start the Leanpub jobs,
 * one window to look at the generated PDF output, because this is what needs     the most tweaking.
 
+    
 Most of the time the first and the second window are combined to one terminal window with two tabs so that I can switch between them with just a keystroke.
 
 I'd like to share some insights about how I setup my environment so that I only need a few keystrokes to create the latest formatted version of my book.

@@ -22,6 +22,7 @@ Using the API I can
 * get the sales data,
 * and create coupons for the book as well as get a list of the coupons.
 
+    
 ## How do I use the Perl module?
 
 All actions related to one book take place as method calls to an object of type `WebService::Leanpub`. For this reason I provide the API key and the slug when using the function `new()` to create such an object.
