@@ -82,4 +82,7 @@ preview: git-push
 status:
 	leanpub job_status
 
+summary:
+	leanpub summary
+
 # end of Makefile
