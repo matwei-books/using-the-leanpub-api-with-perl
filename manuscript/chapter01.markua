@@ -1,4 +1,3 @@
-
 # Using the Perl module
 
 This book describes the Perl module *WebService::Leanpub* and how I use it to produce books. Using the module it is possible to access the Leanpub API from within Perl or from the command line. It is mainly useful to authors at Leanpub and to those who help them to produce their books.
@@ -27,6 +26,7 @@ Using the API I can
 
 All actions related to one book take place as method calls to an object of type `WebService::Leanpub`. For this reason I provide the API key and the slug when using the function `new()` to create such an object.
 
+
 ```
 use WebService::Leanpub;
 
@@ -39,11 +39,13 @@ Using this object I call different methods, depending from what I want to do. Th
 
 To create a complete or partial preview is really easy, there is a method for each of these tasks. In the files *Book.txt* and *Subset.txt* respectively in the Leanpub manuscript directory are the lists of the files to be used for the preview. Leanpub authors know how look like. So I simply have to call
 
+
 ```
 $pv = $wl->preview();
 ```
 
 or
+
 
 ```
 $pv = $wl->subset();
@@ -54,6 +56,7 @@ with my `WebService::Leanpub` object.
 Creating a preview for an individual file is a little bit more elaborate because I have to send the file to the web API using a POST request.
 
 The following example shows how to open a file, read its content into a scalar variable and send it to the web API.
+
 
 ```
 if (open(my $input, '<', $filename)) {
@@ -70,6 +73,7 @@ if (open(my $input, '<', $filename)) {
 
 Publishing a book is easier. I can advise whether the readers get an email and what should be the content of that email. You can find details in the man page of the module.
 
+
 ```
 $pv = $wl->publish( $opt );
 ```
@@ -78,6 +82,7 @@ $pv = $wl->publish( $opt );
 
 Because I only start the creation of a preview or the publishing process of my book, it may happen that I want to know the state of the affairs. This is as easy as it can be:
 
+
 ```
 $pv = $wl->get_job_status();
 ```
@@ -85,6 +90,7 @@ $pv = $wl->get_job_status();
 ### Summary of the book
 
 To get a summary of the book I just need to call the function `summary()`.
+
 
 ```
 $pv = $wl->summary();
@@ -97,6 +103,7 @@ The web API doesn't need an API key for this task but the function `new()` that 
 There are two methods to get the sales data.
 
 I use one for a summary of the sales data and the other for information about the individual purchases.
+
 
 ```
 $pv = $wl->get_sales_data();
@@ -111,6 +118,7 @@ The function `get_individual_purchases()` delivers the data for the last 50 purc
 ### Coupons
 
 I can create, list and change coupons.
+
 
 ```
 $pv = $wl->create_coupon(\%lopt);
@@ -128,6 +136,7 @@ I don't need to program - with Perl - anymore, because there is a command line p
 
 The program uses `Getopt::Long` and `Pod::Usage`, so it's very easy to get a short help text with the command line option `-h` or `--help` and the full man page with option `-m` or `--man`.
 
+
 ```
 $ leanpub --help
 Usage:
@@ -138,6 +147,7 @@ Usage:
 When calling the program I tell the program what to do with the command argument. These command arguments are called like the methods of the Perl module.
 
 I may add some global options before the command and some command specific options after the command. The man page of the program - contained in chapter 3 - goes into the details.
+
 
 ```
 Options:
@@ -154,6 +164,7 @@ Options:
 The global options `-api_key` and `-slug` are so important that I have to provide them nearly every time I call the program.
 
 Because this is tedious I can provide these in a configuration file called *.leanpub*.
+
 
 ```
 $ cat .leanpub
@@ -174,3 +185,4 @@ This option is only active with the command `publish` and I need this option for
 ## Upshot
 
 I use the module `WebService::Leanpub` or more precisely the command line program `leanpub` together with an appropriate Makefile daily when working on my books. It fits seamless into my workflow which consists of an editor window, a shell and a PDF viewer. Using this I avoid interruptions - and possible distractions - from switching to the web browser.
+

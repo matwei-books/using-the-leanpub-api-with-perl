@@ -1,4 +1,3 @@
-
 ## NAME
 
 leanpub - access the Leanpub web API
@@ -8,6 +7,7 @@ leanpub - access the Leanpub web API
 This document refers to leanpub version 0.3
 
 ## USAGE
+
 
 ```
 leanpub [options] command [command options]
@@ -154,6 +154,7 @@ The slug is the part of the URL for your book coming after `https://leanpub.com/
 This program searches in the current working directory and all directories above for a text file named _.leanpub.conf_. It reads these files and adds configuration directives which are not set so far to its configuration.
 
 The format of the file is rather simple. It is just a key and a value separated by an equal sign and optional whitespace. Valid keys are the names of the global options without any minus or plus sign. For instance I have a file containing something like:
+
 
 ```
 # configuration for leanpub
