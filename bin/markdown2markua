@@ -11,132 +11,172 @@
 use strict;
 use warnings;
 
-sub convert {
-	my ($in,$out) = @_;
+package Markdown::Markua;
 
-	my $last_code_block = "";
-	my $last_par        = "";
-	my $last_ul_item    = "";
-	my %state_table = (
-		0 => sub {			# empty line
-			my $line = shift;
-			chomp $line;
-			if ($line =~ /^-# (.+)$/) {
-				print $out "# $1 #";
-				return 0;
-			}
-			if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
-				print $out "\n";
-				$last_ul_item = $2;
-				return 2;
-			}
-			if ($line =~ /^ {4}(.+)$/) {
-				$last_code_block = "$1\n";
-				return 4;
-			}
-			if ($line !~ /^\s*$/) {
-				print $out "\n";
-				$last_par = $line;
-				return 1;
-			}
-			print $out $line, "\n";
-			return 0;
-		},
-		1 => sub {			# paragraph
-			my $line = shift;
-			chomp $line;
-			if ($line =~ /^\s*$/) {
-				print $out "$last_par\n";
-				$last_par = "";
-				return 0;
-			}
-			$last_par .= " $line";
-			return 1;
-		},
-		2 => sub {			# start list item
-			my $line = shift;
-			chomp $line;
-			if ($line =~ /^\s*$/) {
-				print $out "* $last_ul_item\n";
-				$last_ul_item = "";
-				return 3;
-			}
-			if ($line =~ /^[-*+](\s{1,4}|\t)(.*)$/) {
-				print $out "* $last_ul_item\n";
-				$last_ul_item = $2;
-				return 2;
-			}
-			$last_ul_item .= " $line";
-			return 2;
-		},
-		3 => sub {			# after list item
-			my $line = shift;
-			chomp $line;
-			if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
-				print $out "\n";
-				$last_ul_item = $2;
-				return 2;
-			}
-			if ($line =~ /^ {4}(.+)$/) {
-				$last_ul_item .= "$1 ";
-				return 3;
-			}
-			if ($line !~ /^\s*$/) {
-				print $out "\n    $last_ul_item\n";
-				$last_par = "$line";
-				$last_ul_item = "";
-				return 1;
-			}
-			print $out "\n    $last_ul_item\n";
-			$last_ul_item = "";
-			return 3;
-		},
-		4 => sub {			# indented code block
-			my $line = shift;
-			if ($line =~ /^ {4}(.+)$/) {
-				$last_code_block .= "$1\n";
-				return 4;
-			}
-			if ($line =~ /^\t(.+)$/) {
-				$last_code_block .= "    $1\n";
-				return 4;
-			}
-			if ($line =~ /^\s*$/) {
-				return 5;
-			}
-		},
-		5 => sub {			# empty line after indented code
-			my $line = shift;
-			chomp $line;
-			if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
-				print $out "\n```\n$last_code_block```\n\n";
-				$last_code_block = "";
-				$last_ul_item = $2;
-				return 2;
-			}
-			if ($line =~ /^ {4}(.+)$/) {
-				$last_code_block .= "\n$1\n";
-				return 4;
-			}
-			if ($line !~ /^\s*$/) {
-				print $out "\n```\n$last_code_block```\n\n";
-				$last_code_block = "";
-				$last_par = $line;
-				return 1;
-			}
-			$last_code_block .= "\n";
-			return 5;
-		},
-	);
-	my $state = 0;
+use version; our $VERSION = qv('0.0.1');
 
-	while (my $line = <$in>) {
-		$state = $state_table{$state}->($line);
+sub new {
+	my ($self) = @_;
+	my $type = ref($self) || $self;
+
+	$self = bless {
+			last_code_block => '',
+			last_par	=> '',
+			last_ul_item	=> '',
+			state_table	=> {
+				0 => sub { $self->_empty_line(@_) },
+				1 => sub { $self->_paragraph(@_) },
+				2 => sub { $self->_start_list_item(@_) },
+				3 => sub { $self->_after_list_item(@_) },
+				4 => sub { $self->_indented_code_block(@_) },
+				5 => sub { $self->_empty_line_after_indented_code(@_) },
+			},
+			state		=> 0,
+		}, $type;
+	return $self;
+}
+
+sub _empty_line{			# empty line
+	my ($self,$line) = @_;
+
+	if ($line =~ /^-# (.+)$/) {
+		$self->printout("# $1 #");
+		return 0;
 	}
-	if ($last_par) {
-		print $out $last_par, "\n";
+	if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
+		$self->{last_ul_item} = $2;
+		return 2;
+	}
+	if ($line =~ /^ {4}(.+)$/) {
+		$self->{last_code_block} = "$1\n";
+		return 4;
+	}
+	if ($line !~ /^\s*$/) {
+		$self->{last_par} = $line;
+		return 1;
+	}
+	$self->printout($line);
+	return 0;
+} # _empty_line()
+
+sub _paragraph {			# paragraph
+	my ($self,$line) = @_;
+
+	if ($line =~ /^\s*$/) {
+		$self->printout("$self->{last_par}\n");
+		$self->{last_par} = "";
+		return 0;
+	}
+	$self->{last_par} .= " $line";
+	return 1;
+} # _paragraph()
+
+sub _start_list_item {			# start list item
+	my ($self,$line) = @_;
+
+	if ($line =~ /^\s*$/) {
+		$self->printout("* $self->{last_ul_item}");
+		$self->{last_ul_item} = "";
+		return 3;
+	}
+	if ($line =~ /^[-*+](\s{1,4}|\t)(.*)$/) {
+		$self->printout("* $self->{last_ul_item}");
+		$self->{last_ul_item} = $2;
+		return 2;
+	}
+	$self->{last_ul_item} .= " $line";
+	return 2;
+} # _start_list_item()
+
+sub _after_list_item {			# after list item
+	my ($self,$line) = @_;
+
+	if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
+		$self->printout();
+		$self->{last_ul_item} = $2;
+		return 2;
+	}
+	if ($line =~ /^ {4}(.+)$/) {
+		$self->{last_ul_item} .= "$1 ";
+		return 3;
+	}
+	if ($line !~ /^\s*$/) {
+		$self->printout("\n    $self->{last_ul_item}");
+		$self->{last_par} = "$line";
+		$self->{last_ul_item} = "";
+		return 1;
+	}
+	$self->printout("\n    $self->{last_ul_item}");
+	$self->{last_ul_item} = "";
+	return 3;
+} # _after_list_item
+
+sub _indented_code_block {			# indented code block
+	my ($self,$line) = @_;
+
+	if ($line =~ /^ {4}(.+)$/) {
+		$self->{last_code_block} .= "$1\n";
+		return 4;
+	}
+	if ($line =~ /^\t(.+)$/) {
+		$self->{last_code_block} .= "    $1\n";
+		return 4;
+	}
+	if ($line =~ /^\s*$/) {
+		return 5;
+	}
+} # _indented_code_block()
+
+sub _empty_line_after_indented_code {			# empty line after indented code
+	my ($self,$line) = @_;
+
+	if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
+		$self->printout("\n```\n$self->{last_code_block}```\n");
+		$self->{last_code_block} = "";
+		$self->{last_ul_item} = $2;
+		return 2;
+	}
+	if ($line =~ /^ {4}(.+)$/) {
+		$self->{last_code_block} .= "\n$1\n";
+		return 4;
+	}
+	if ($line !~ /^\s*$/) {
+		$self->printout("\n```\n$self->{last_code_block}```\n");
+		$self->{last_code_block} = "";
+		$self->{last_par} = $line;
+		return 1;
+	}
+	$self->{last_code_block} .= "\n";
+	return 5;
+} # _empty_line_after_indented_code()
+
+sub printout {
+	my $self = shift;
+	my $out  = $self->{out};
+	print $out @_, "\n";
+} # printout()
+
+sub process {
+	my ($self,$line) = @_;
+	$self->{state} = $self->{state_table}->{$self->{state}}->($line);
+} # process()
+
+sub convert {
+	my ($self,$in,$out) = @_;
+
+	$self->{out} = $out;
+	while (my $line = <$in>) {
+		chomp $line;
+		$self->process($line);
+	}
+	if ($self->{last_par}) {
+		$self->printout($self->{last_par});
 	}
 } # convert()
 
-convert(*STDIN,*STDOUT);
+package main;
+
+my $m2m = Markdown::Markua->new();
+
+$m2m->convert(*STDIN,*STDOUT);
 
