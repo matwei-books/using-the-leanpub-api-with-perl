@@ -1,4 +1,3 @@
-
 # WebService::Leanpub (module)
 
 The module WebService::Leanpub allows the use of the Leanpub API from within Perl to generate previews of your books, publish your books and query your sales data.
