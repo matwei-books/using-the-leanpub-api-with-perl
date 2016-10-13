@@ -157,7 +157,7 @@ sub _empty_line_after_indented_code {			# empty line after indented code
 	my ($self,$line) = @_;
 
 	if ($line =~ /^[*-+](\s{1,4}|\t)(\S.*)$/) {
-		$self->printout("\n```\n$self->{last_code_block}```\n");
+		$self->printout("```\n$self->{last_code_block}```\n");
 		$self->{last_code_block} = "";
 		$self->{last_ul_item} = "* $2";
 		return 'START_LIST_ITEM';
@@ -167,7 +167,7 @@ sub _empty_line_after_indented_code {			# empty line after indented code
 		return 4;
 	}
 	if ($line !~ /^\s*$/) {
-		$self->printout("\n```\n$self->{last_code_block}```\n");
+		$self->printout("```\n$self->{last_code_block}```\n");
 		$self->{last_code_block} = "";
 		$self->{last_par} = $line;
 		return 1;
