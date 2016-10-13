@@ -24,17 +24,40 @@ sub new {
 			last_par	=> '',
 			last_ul_item	=> '',
 			state_table	=> {
-				0 => sub { $self->_empty_line(@_) },
-				1 => sub { $self->_paragraph(@_) },
-				2 => sub { $self->_start_list_item(@_) },
-				3 => sub { $self->_after_list_item(@_) },
-				4 => sub { $self->_indented_code_block(@_) },
-				5 => sub { $self->_empty_line_after_indented_code(@_) },
+				START => sub { $self->_start(@_) },
+				0     => sub { $self->_empty_line(@_) },
+				1     => sub { $self->_paragraph(@_) },
+				2     => sub { $self->_start_list_item(@_) },
+				3     => sub { $self->_after_list_item(@_) },
+				4     => sub { $self->_indented_code_block(@_) },
+				5     => sub { $self->_empty_line_after_indented_code(@_) },
 			},
-			state		=> 0,
+			state		=> 'START',
 		}, $type;
 	return $self;
 }
+
+sub _start {
+	my ($self,$line) = @_;
+
+	if ($line =~ /^-# (.+)$/) {
+		$self->printout("# $1 #");
+		return 0;
+	}
+	if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
+		$self->{last_ul_item} = $2;
+		return 2;
+	}
+	if ($line =~ /^ {4}(.+)$/) {
+		$self->{last_code_block} = "$1\n";
+		return 4;
+	}
+	if ($line !~ /^\s*$/) {
+		$self->{last_par} = $line;
+		return 1;
+	}
+	return 'START';
+} # _start()
 
 sub _empty_line{			# empty line
 	my ($self,$line) = @_;
