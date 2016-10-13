@@ -49,7 +49,6 @@ Optionally this method takes as argument a hash reference with this key:
 
     the page of the individual purchases data. 
 
-    
 ### get\_job\_status()
 
 Get the status of the last job.
@@ -80,7 +79,6 @@ The argument `$opt` is a hash reference with the following keys and values:
 
     The content of the file in a scalar string. 
 
-    
 ### publish( $opt )
 
 This will publish your book without emailing your readers.
@@ -95,7 +93,6 @@ The argument `$opt` is a hash reference with the following keys:
 
     The value corresponding to this key is sent as release note. 
 
-    
 ### create\_coupon( $opt )
 
 Create a coupon.
@@ -138,7 +135,6 @@ The argument `$opt` is a hash reference with the following keys:
 
     Values '0', 'false', 'no' count as false, all other values as true. 
 
-    
 ### update\_coupon( $opt )
 
 Update a coupon.
@@ -171,7 +167,6 @@ Since this API function does not need an API key, this is the only method that r
 
     A slug is the part after the hostname in the Leanpub URL of your book. For instance the book "Using the Leanpub API with Perl" has the URL [https://leanpub.com/using-the-leanpub-api-with-perl](https://leanpub.com/using-the-leanpub-api-with-perl) and the slug for this book is `using-the-leanpub-api-with-perl`. 
 
-    
 ## CONFIGURATION AND ENVIRONMENT
 
 WebService::Leanpub requires no configuration files or environment variables.

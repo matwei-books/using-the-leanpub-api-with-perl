@@ -39,7 +39,6 @@ leanpub [options] command [command options]
 
     Print $WebService::Leanpub::VERSION and exit. 
 
-    
 ## COMMANDS
 
 * summary
@@ -140,7 +139,6 @@ leanpub [options] command [command options]
 
     This command takes the same argumentes as create\_coupon but only the option \--coupon\_code is required, all others are optional. 
 
-    
 ## DESCRIPTION
 
 This program interacts with the Leanpub API. You can find details about this API at [https://leanpub.com/help/api](https://leanpub.com/help/api).
