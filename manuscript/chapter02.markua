@@ -20,7 +20,6 @@ Having a new Dropbox folder containing the books files, I start creating my work
 
 In this directory I create a directory named images and two links referring to the subdirectories *manuscript* and *preview* of the Dropbox folder.
 
-
 ```
 $ slug=using-the-leanpub-api-with-perl
 $ mkdir images
@@ -37,7 +36,6 @@ Now that I have everything in place it's time to setup the Makefile.
 ### Constants
 
 First I define some constants which I will use later in different rules.
-
 
 ```
 DROPBOXDIR = manuscript
@@ -59,7 +57,6 @@ DROPBOXFILES = $(DROPBOXDIR)/Book.txt \
 
 Those constants are followed by some implicit rules how to create certain files. These are mostly copy commands:
 
-
 ```
 $(DROPBOXDIR)/%.md: %.md
     cp $< $@
@@ -78,7 +75,6 @@ These rules just say: if you need a file in `$(DROPBOXDIR)` and you have a newer
 
 Sometimes I like to have the full table of contents in the sample book but without the text in most of the chapters. To achieve this, I create files named *chapter$nr-empty.md* automatically from the input:
 
-
 ```
 $(DROPBOXDIR)/%-empty.md: %.md
 	grep '^#' $< | grep -v '^###' | sed -e 's/^/\n/' > $@
@@ -94,13 +90,11 @@ The first explicit target is called `all` and does nothing. So if I accidentally
 
 There are four targets that I use regularly 
 
-
 ```
 dropbox: $(DROPBOXFILES)
 ```
 
 This is a valid target although it contains no explicit action. This rule makes sure that all necessary files are copied to the Dropbox folder.
-
 
 ```
 partial: dropbox revision.md
@@ -109,14 +103,12 @@ partial: dropbox revision.md
 
 This targets depends on the target `dropbox` so that it first makes sure that all files are copied to the Dropbox folder and then starts its action, namely sleep 15 seconds to allow Dropbox to copy those files to Leanpub and after that starting the generation of a partial preview - using *Subset.txt* - for the book.
 
-
 ```
 preview: dropbox revision.md
         sleep 15 && leanpub preview
 ```
 
 This target does the same for a full preview.
-
 
 ```
 status:

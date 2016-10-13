@@ -8,7 +8,6 @@ This document describes WebService::Leanpub version 0.3
 
 ## SYNOPSIS
 
-
 ```
 use WebService::Leanpub;
 
