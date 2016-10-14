@@ -16,7 +16,7 @@ Using the API I can
 
 * create previews for the book, parts of the book or individual files,
 * publish the book,
-* get the book summary information (this is the only function that works     without an API key),
+* get the book summary information (this is the only function that works without an API key),
 * query for the status of the last job,
 * get the sales data,
 * and create coupons for the book as well as get a list of the coupons.

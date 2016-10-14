@@ -46,7 +46,7 @@ Optionally this method takes as argument a hash reference with this key:
 
 * `page`
 
-    the page of the individual purchases data. 
+    the page of the individual purchases data.
 
 ### get\_job\_status()
 
@@ -76,7 +76,7 @@ The argument `$opt` is a hash reference with the following keys and values:
 
 * content
 
-    The content of the file in a scalar string. 
+    The content of the file in a scalar string.
 
 ### publish( $opt )
 
@@ -86,11 +86,11 @@ The argument `$opt` is a hash reference with the following keys:
 
 * email\_readers
 
-    If the corresponding value evaluates to _true_, an email is sent to the readers. 
+    If the corresponding value evaluates to _true_, an email is sent to the readers.
 
 * release\_notes
 
-    The value corresponding to this key is sent as release note. 
+    The value corresponding to this key is sent as release note.
 
 ### create\_coupon( $opt )
 
@@ -100,39 +100,39 @@ The argument `$opt` is a hash reference with the following keys:
 
 * coupon\_code
 
-    Required. The coupon code for this coupon. This must be unique for the book. 
+    Required. The coupon code for this coupon. This must be unique for the book.
 
 * discounted\_price
 
-    Required. The amount the reader will pay when using the coupon. 
+    Required. The amount the reader will pay when using the coupon.
 
 * start\_date
 
-    Required. The date the coupon is valid from. Formatted like YYYY-MM-DD. 
+    Required. The date the coupon is valid from. Formatted like YYYY-MM-DD.
 
 * end\_date
 
-    The date the coupon is valid until. Formatted like YYYY-MM-DD. 
+    The date the coupon is valid until. Formatted like YYYY-MM-DD.
 
 * has\_uses\_limit
 
-    Whether or not the coupon has a uses limit. 
+    Whether or not the coupon has a uses limit.
 
-    Values '0', 'false', 'no' count as false, all other values as true. 
+    Values '0', 'false', 'no' count as false, all other values as true.
 
 * max\_uses
 
-    The max number of uses available for a coupon. An integer. 
+    The max number of uses available for a coupon. An integer.
 
 * note
 
-    A description of the coupon. This is just used to remind you of what it was for. 
+    A description of the coupon. This is just used to remind you of what it was for.
 
 * suspended
 
-    Whether or not the coupon is suspended. 
+    Whether or not the coupon is suspended.
 
-    Values '0', 'false', 'no' count as false, all other values as true. 
+    Values '0', 'false', 'no' count as false, all other values as true.
 
 ### update\_coupon( $opt )
 
@@ -158,13 +158,13 @@ Since this API function does not need an API key, this is the only method that r
 
 * `Missing API key for Leanpub`
 
-    Since the Leanpub API only works with an API key from leanpub.com, you have to provide an API key as first argument to WebService::Leanpub->new(). 
+    Since the Leanpub API only works with an API key from leanpub.com, you have to provide an API key as first argument to WebService::Leanpub->new().
 
 * `Missing SLUG for book`
 
-    Since every action in the Leanpub API involves a book which is identified by a slug, you have to provide the slug as the second argument to WebService::Leanpub->new(). 
+    Since every action in the Leanpub API involves a book which is identified by a slug, you have to provide the slug as the second argument to WebService::Leanpub->new().
 
-    A slug is the part after the hostname in the Leanpub URL of your book. For instance the book "Using the Leanpub API with Perl" has the URL [https://leanpub.com/using-the-leanpub-api-with-perl](https://leanpub.com/using-the-leanpub-api-with-perl) and the slug for this book is `using-the-leanpub-api-with-perl`. 
+    A slug is the part after the hostname in the Leanpub URL of your book. For instance the book "Using the Leanpub API with Perl" has the URL [https://leanpub.com/using-the-leanpub-api-with-perl](https://leanpub.com/using-the-leanpub-api-with-perl) and the slug for this book is `using-the-leanpub-api-with-perl`.
 
 ## CONFIGURATION AND ENVIRONMENT
 

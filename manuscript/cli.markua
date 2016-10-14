@@ -16,127 +16,127 @@ leanpub [options] command [command options]
 
 * **-api\_key=key**
 
-    Provide the Leanpub API key to be used for all actions. 
+    Provide the Leanpub API key to be used for all actions.
 
 * **-help**
 
-    Print a brief help message and exit. 
+    Print a brief help message and exit.
 
 * **-manual**
 
-    Print the manual page and exit. 
+    Print the manual page and exit.
 
 * **-really**
 
-    State that you really intend to do the command (e.g. publish). 
+    State that you really intend to do the command (e.g. publish).
 
 * **-slug=your\_book**
 
-    Provide the book's slug. 
+    Provide the book's slug.
 
 * **-version**
 
-    Print $WebService::Leanpub::VERSION and exit. 
+    Print $WebService::Leanpub::VERSION and exit.
 
 ## COMMANDS
 
 * summary
 
-    Get information about the book. 
+    Get information about the book.
 
 * job\_status
 
-    Retrieve the status of the last job. 
+    Retrieve the status of the last job.
 
 * partial\_preview
 
-    Start a partial preview of your book using Subset.txt. 
+    Start a partial preview of your book using Subset.txt.
 
 * subset
 
-    Start a partial preview of your book using Subset.txt. 
+    Start a partial preview of your book using Subset.txt.
 
 * preview
 
-    Start a preview of your book. 
+    Start a preview of your book.
 
 * single filename
 
-    Create a preview from a single file. 
+    Create a preview from a single file.
 
 * publish \[ options \]
 
-    Publish your book. 
+    Publish your book.
 
-    You have to use option **-really** with this command. 
+    You have to use option **-really** with this command.
 
-    This command takes the following command options: 
+    This command takes the following command options:
 
-    - -email\_readers 
+    * -email\_readers
 
         Email readers, notifying them that the book has been updated. 
 
-    - -release\_notes=notes 
+    * -release\_notes=notes
 
         The release notes to be included in the email to the readers. 
 
 * sales\_data
 
-    Retrieve a summary of sales data. 
+    Retrieve a summary of sales data.
 
 * individual\_purchases \[ -page=p \]
 
-    Retrieve data about individual purchases. 
+    Retrieve data about individual purchases.
 
-    This command takes the option `-page` to set the page of the individual purchases report to be retrieved. 
+    This command takes the option `-page` to set the page of the individual purchases report to be retrieved.
 
 * coupons options
 
-    Get a list of coupons available for the book. 
+    Get a list of coupons available for the book.
 
 * create\_coupon
 
-    Create a new coupon for your book. 
+    Create a new coupon for your book.
 
-    This function takes the following command options: 
+    This function takes the following command options:
 
-    - -coupon\_code=code 
+    * -coupon\_code=code
 
-        Required.     The coupon code for this coupon. This must be unique for the book. 
+        Required. The coupon code for this coupon. This must be unique for the book. 
 
-    - -discounted\_price=price 
+    * -discounted\_price=price
 
-        Required.     The amount the reader will pay when using the coupon. 
+        Required. The amount the reader will pay when using the coupon. 
 
-    - -start\_date=YYYY-MM-DD 
+    * -start\_date=YYYY-MM-DD
 
-        Required.     The date the coupon is valid from. 
+        Required. The date the coupon is valid from. 
 
-    - -end\_date=YYYY-MM-DD 
+    * -end\_date=YYYY-MM-DD
 
         The date the coupon is valid until. 
 
-    - -has\_uses\_limit 
+    * -has\_uses\_limit
 
         Whether or not the coupon has a uses limit. 
 
-    - -max\_uses=uses 
+    * -max\_uses=uses
 
         The max number of uses available for a coupon. An integer. 
 
-    - -note=note\_for\_me 
+    * -note=note\_for\_me
 
-        A description of the coupon. This is just used to remind you of what it was     for. 
+        A description of the coupon. This is just used to remind you of what it was for. 
 
-    - -suspended 
+    * -suspended
 
         Whether or not the coupon is suspended. 
 
 * update\_coupon options
 
-    Update a coupon. 
+    Update a coupon.
 
-    This command takes the same argumentes as create\_coupon but only the option \--coupon\_code is required, all others are optional. 
+    This command takes the same argumentes as create\_coupon but only the option \--coupon\_code is required, all others are optional.
 
 ## DESCRIPTION
 
