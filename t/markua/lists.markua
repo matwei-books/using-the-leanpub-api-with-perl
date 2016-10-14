@@ -7,15 +7,20 @@ Here comes an unordered list
 
 * The last item has more than one paragraph.
 
-    It has more than two paragraphs. 
+    It has more than two paragraphs.
 
-    It hat three paragraphs. 
+    It hat three paragraphs.
 
 But this is not in the list. Below's a list with dashes:
 
 * one item
 
-    and a second paragraph. 
+    and a second paragraph.
+
+    * and a nested list
+    * with two itemsover more than one line 
+
+	and a second paragraph
 
 The list has ended.
 

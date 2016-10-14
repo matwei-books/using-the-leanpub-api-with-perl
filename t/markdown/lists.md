@@ -19,5 +19,11 @@ Below's a list with dashes:
 
     and a second paragraph.
 
+    + and a nested list
+    + with two items
+        over more than one line
+
+	and a second paragraph
+
 The list has ended.
 
