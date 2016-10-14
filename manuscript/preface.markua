@@ -1,6 +1,6 @@
 # Preface
 
-After reading the [notice in Google groups](https://groups.google.com/d/msg/leanpub/CMfgZg4_ttw/z2j6cxoscmIJ) from Scott Patten about the Leanpub API, my first thought was: I want to use this with perl.
+After reading the [notice in Google groups](https://groups.google.com/d/msg/leanpub/CMfgZg4_ttw/z2j6cxoscmIJ){i: "Google groups"} from Scott Patten{i: "Patten, Scott"} about the Leanpub API, my first thought was: I want to use this with perl.
 
 And then I wrote the perl module.
 
