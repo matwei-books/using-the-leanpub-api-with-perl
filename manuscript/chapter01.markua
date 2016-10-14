@@ -66,6 +66,7 @@ if (open(my $input, '<', $filename)) {
 
 ### Publish
 
+{i: "Perl Module!publish"}
 Publishing a book is easier. I can advise whether the readers get an email and what should be the content of that email. You can find details in the man page of the module.
 
 ```
