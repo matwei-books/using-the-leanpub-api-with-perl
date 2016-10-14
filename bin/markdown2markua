@@ -29,6 +29,8 @@ sub new {
 				1     => sub { $self->_paragraph(@_) },
 				'START_LIST_ITEM'	=> sub { $self->_start_list_item(@_) },
 				'AFTER_LIST_ITEM'	=> sub { $self->_after_list_item(@_) },
+				'START_LIST_ITEM2'	=> sub { $self->_start_list_item2(@_) },
+				'AFTER_LIST_ITEM2'	=> sub { $self->_after_list_item2(@_) },
 				4     => sub { $self->_indented_code_block(@_) },
 				5     => sub { $self->_empty_line_after_indented_code(@_) },
 			},
@@ -103,9 +105,18 @@ sub _start_list_item {			# start list item
 		$self->{last_ul_item} = "";
 		return 'AFTER_LIST_ITEM';
 	}
+	if ($line =~ /^ {4}[-*+](\s{1,4}|\t)(.*)$/) {
+		$self->printout("$self->{last_ul_item}");
+		$self->{last_ul_item2} = "    * $2";
+		return 'START_LIST_ITEM2';
+	}
 	if ($line =~ /^[-*+](\s{1,4}|\t)(.*)$/) {
 		$self->printout("$self->{last_ul_item}");
 		$self->{last_ul_item} = "* $2";
+		return 'START_LIST_ITEM';
+	}
+	if ($line =~ /^ {4}(.+)$/) {
+		$self->{last_ul_item} .= ($self->{last_ul_item} ? " $1" : $1);
 		return 'START_LIST_ITEM';
 	}
 	$self->{last_ul_item} .= " $line";
@@ -115,12 +126,16 @@ sub _start_list_item {			# start list item
 sub _after_list_item {			# after list item
 	my ($self,$line) = @_;
 
+	if ($line =~ /^ {4}[-*+](\s{1,4}|\t)(\S.*)$/) {
+		$self->{last_ul_item2} = "    * $2";
+		return 'START_LIST_ITEM2';
+	}
 	if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
 		$self->{last_ul_item} = "* $2";
 		return 'START_LIST_ITEM';
 	}
 	if ($line =~ /^ {4}(.+)$/) {
-		$self->{last_ul_item} .= "$1 ";
+		$self->{last_ul_item} .= ($self->{last_ul_item} ? " $1" : $1);
 		return 'AFTER_LIST_ITEM';
 	}
 	if ($line !~ /^\s*$/) {
@@ -136,6 +151,66 @@ sub _after_list_item {			# after list item
 	$self->{last_ul_item} = "";
 	return 'AFTER_LIST_ITEM';
 } # _after_list_item
+
+sub _start_list_item2 {			# start list item
+	my ($self,$line) = @_;
+
+	if ($line =~ /^\s*$/) {
+		$self->printout("$self->{last_ul_item2}");
+		$self->printout();
+		$self->{last_ul_item2} = "";
+		return 'AFTER_LIST_ITEM2';
+	}
+	if ($line =~ /^[-*+](\s{1,4}|\t)(.*)$/) {
+		$self->printout("$self->{last_ul_item2}");
+		$self->{last_ul_item} = "* $2";
+		return 'START_LIST_ITEM';
+	}
+	if ($line =~ /^ {4}[-*+](\s{1,4}|\t)(.*)$/) {
+		$self->printout("$self->{last_ul_item2}");
+		$self->{last_ul_item2} = "    * $2";
+		return 'START_LIST_ITEM2';
+	}
+	if ($line =~ /^ {8}(.+)$/) {
+		$self->{last_ul_item2} .= "$1 ";
+		return 'START_LIST_ITEM2';
+	}
+#	$self->{last_ul_item2} .= " $line";
+	return 'START_LIST_ITEM2';
+} # _start_list_item2()
+
+sub _after_list_item2 {			# after list item
+	my ($self,$line) = @_;
+
+	if ($line =~ /^ {4}[-*+](\s{1,4}|\t)(\S.*)$/) {
+		$self->{last_ul_item2} = "    * $2";
+		return 'START_LIST_ITEM2';
+	}
+	if ($line =~ /^[-*+](\s{1,4}|\t)(\S.*)$/) {
+		$self->{last_ul_item} = "* $2";
+		return 'START_LIST_ITEM';
+	}
+	if ($line =~ /^ {8}(.+)$/) {
+		$self->{last_ul_item2} .= "$1 ";
+		return 'AFTER_LIST_ITEM2';
+	}
+	if ($line =~ /^ {4}(.+)$/) {
+		$self->{last_ul_item} .= "$1 ";
+		return 'AFTER_LIST_ITEM';
+	}
+	if ($line !~ /^\s*$/) {
+		if ($self->{last_ul_item2}) {
+			$self->printout("        $self->{last_ul_item2}");
+		}
+		$self->{last_par} = "$line";
+		$self->{last_ul_item2} = "";
+		return 1;
+	}
+	$self->printout("        $self->{last_ul_item2}");
+	$self->printout();
+	$self->{last_ul_item2} = "";
+	return 'AFTER_LIST_ITEM2';
+} # _after_list_item2()
 
 sub _indented_code_block {			# indented code block
 	my ($self,$line) = @_;
